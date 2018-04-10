@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Survey Form</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+        <script type ="text/javascript">
+             $(document).ready(function(){
+                // this triggers the connection event in our server!
+                var socket  = io.connect();
+                // we'll write all the socket stuff after the above line!
+                $('#survey').submit(function(e){
+                    e.preventDefault();
+                    var formData = {
+                        name:$('#name').val(),
+                        location:$('#location').val(),
+                        language:$('#language').val(),
+                        comment:$('#comment').val()
+                    }
+                    socket.emit( "posting_form",formData); //this event gets sent to the server
+                });
+                    socket.on( 'updated_message', function(data){ //server sends back response to the client
+                        $("#posted_message").prepend("<p>Name: "+data.name+"</p> <p>Location: "+data.location+"</p> <p>Language: "+data.language+"</p> <p>Comment: "+data.comment+"</p>");
+                });
+                    socket.on("random_number", function(data) {
+                        $("#posted_message").prepend("{Your random number is:"+data.random+"}")
+                    });
+            })
+        </script>
+</head>
+<body>
+    <div id="posted_message"></div>
+    <form action="" id="survey">
+    <p>Your Name:<input type="text" id="name"></p>
+    <p>Location: 
+        <select>
+            <option value="AL">Alabama</option>
+            <option value="AK">Alaska</option>
+            <option value="AZ">Arizona</option>
+            <option value="AR">Arkansas</option>
+            <option value="CA">California</option>
+            <option value="CO">Colorado</option>
+            <option value="CT">Connecticut</option>
+            <option value="DE">Delaware</option>
+            <option value="DC">District Of Columbia</option>
+            <option value="FL">Florida</option>
+            <option value="GA">Georgia</option>
+            <option value="HI">Hawaii</option>
+            <option value="ID">Idaho</option>
+            <option value="IL">Illinois</option>
+            <option value="IN">Indiana</option>
+            <option value="IA">Iowa</option>
+            <option value="KS">Kansas</option>
+            <option value="KY">Kentucky</option>
+            <option value="LA">Louisiana</option>
+            <option value="ME">Maine</option>
+            <option value="MD">Maryland</option>
+            <option value="MA">Massachusetts</option>
+            <option value="MI">Michigan</option>
+            <option value="MN">Minnesota</option>
+            <option value="MS">Mississippi</option>
+            <option value="MO">Missouri</option>
+            <option value="MT">Montana</option>
+            <option value="NE">Nebraska</option>
+            <option value="NV">Nevada</option>
+            <option value="NH">New Hampshire</option>
+            <option value="NJ">New Jersey</option>
+            <option value="NM">New Mexico</option>
+            <option value="NY">New York</option>
+            <option value="NC">North Carolina</option>
+            <option value="ND">North Dakota</option>
+            <option value="OH">Ohio</option>
+            <option value="OK">Oklahoma</option>
+            <option value="OR">Oregon</option>
+            <option value="PA">Pennsylvania</option>
+            <option value="RI">Rhode Island</option>
+            <option value="SC">South Carolina</option>
+            <option value="SD">South Dakota</option>
+            <option value="TN">Tennessee</option>
+            <option value="TX">Texas</option>
+            <option value="UT">Utah</option>
+            <option value="VT">Vermont</option>
+            <option value="VA">Virginia</option>
+            <option value="WA">Washington</option>
+            <option value="WV">West Virginia</option>
+            <option value="WI">Wisconsin</option>
+            <option value="WY">Wyoming</option>
+        </select>
+    </p>
+    <p>Favorite Language: 
+        <select id="language">
+            <option>Javascript</option>
+            <option>Python</option>
+            <option>C++</option>
+            <option>Ruby</option>
+            <option>Node</option>
+        </select>
+    </p>
+    <p>Comment (optional):
+        <br>
+        <textarea id="comment" rows="5" cols="50"></textarea></p>
+    <p><input type="submit" value="Submit"></p>
+    </form>
+</body>
+</html>
